@@ -24,13 +24,11 @@ func CreatePost() gin.HandlerFunc {
 		var post models.Post
 		defer cancel()
 
-		//validate the request body
 		if err := c.BindJSON(&post); err != nil {
 			c.JSON(http.StatusBadRequest, responses.PostResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
-		//use the validator library to validate required fields
 		if validationErr := validatePost.Struct(&post); validationErr != nil {
 			c.JSON(http.StatusBadRequest, responses.PostResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
 			return
@@ -102,13 +100,11 @@ func EditAPost() gin.HandlerFunc {
 		defer cancel()
 		objId, _ := primitive.ObjectIDFromHex(postId)
 
-		//validate the request body
 		if err := c.BindJSON(&post); err != nil {
 			c.JSON(http.StatusBadRequest, responses.PostResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
-		//use the validator library to validate required fields
 		if validationErr := validatePost.Struct(&post); validationErr != nil {
 			c.JSON(http.StatusBadRequest, responses.PostResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
 			return

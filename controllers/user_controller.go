@@ -24,13 +24,11 @@ func CreateUser() gin.HandlerFunc {
 		var user models.User
 		defer cancel()
 
-		//validate the request body
 		if err := c.BindJSON(&user); err != nil {
 			c.JSON(http.StatusBadRequest, responses.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
-		//use the validator library to validate required fields
 		if validationErr := validate.Struct(&user); validationErr != nil {
 			c.JSON(http.StatusBadRequest, responses.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
 			return
@@ -80,13 +78,11 @@ func EditAUser() gin.HandlerFunc {
 		defer cancel()
 		objId, _ := primitive.ObjectIDFromHex(userId)
 
-		//validate the request body
 		if err := c.BindJSON(&user); err != nil {
 			c.JSON(http.StatusBadRequest, responses.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
 
-		//use the validator library to validate required fields
 		if validationErr := validate.Struct(&user); validationErr != nil {
 			c.JSON(http.StatusBadRequest, responses.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
 			return
@@ -99,7 +95,6 @@ func EditAUser() gin.HandlerFunc {
 			return
 		}
 
-		//get updated user details
 		var updatedUser models.User
 		if result.MatchedCount == 1 {
 			err := userCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&updatedUser)
@@ -153,7 +148,6 @@ func GetAllUsers() gin.HandlerFunc {
 			return
 		}
 
-		//reading from the db in an optimal way
 		defer results.Close(ctx)
 		for results.Next(ctx) {
 			var singleUser models.User
