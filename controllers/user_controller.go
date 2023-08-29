@@ -102,7 +102,7 @@ func EditAUser() gin.HandlerFunc {
 		//get updated user details
 		var updatedUser models.User
 		if result.MatchedCount == 1 {
-			err := userCollection.FindOne(ctx, bson.M{"id": objId}).Decode(&updatedUser)
+			err := userCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&updatedUser)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, responses.UserResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 				return
