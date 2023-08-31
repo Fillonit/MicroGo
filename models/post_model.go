@@ -16,4 +16,14 @@ type Post struct {
 	UpdatedAt time.Time          `json:"updated_at,omitempty"`
 	Views     int                `json:"views,omitempty"`
 	Pongs     int                `json:"pongs,omitempty" bson:"pongs,omitempty" default:"1"`
+	Comments  []Comment          `json:"comments,omitempty" bson:"comments,omitempty"`
+}
+
+type Comment struct {
+	Id        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Content   string             `json:"content,omitempty" validate:"required"`
+	UserId    primitive.ObjectID `json:"userId,omitempty" bson:"userId,omitempty"`
+	CreatedAt time.Time          `json:"created_at,omitempty"`
+	UpdatedAt time.Time          `json:"updated_at,omitempty"`
+	Pongs     int                `json:"pongs,omitempty" bson:"pongs,omitempty" default:"1"`
 }

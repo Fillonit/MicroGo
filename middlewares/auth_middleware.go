@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"MicroGo/configs"
 	"net/http"
 	"strings"
 
@@ -23,7 +24,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenString := strings.Split(authHeader, " ")[1]
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return []byte("secret"), nil
+			return []byte(configs.EnvSecretKey()), nil
 		})
 
 		if err != nil || !token.Valid {
