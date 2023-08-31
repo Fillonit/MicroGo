@@ -35,11 +35,15 @@ func CreatePost() gin.HandlerFunc {
 		}
 
 		newPost := models.Post{
-			Id:      primitive.NewObjectID(),
-			Title:   post.Title,
-			Content: post.Content,
-			Image:   post.Image,
-			UserId:  post.UserId,
+			Id:        primitive.NewObjectID(),
+			Title:     post.Title,
+			Content:   post.Content,
+			Image:     post.Image,
+			UserId:    post.UserId,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+			Views:     1,
+			Pongs:     1,
 		}
 
 		result, err := postCollection.InsertOne(ctx, newPost)
@@ -64,10 +68,28 @@ func GetAPost() gin.HandlerFunc {
 		err := postCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&post)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, responses.PostResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			postCollection.UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$inc": bson.M{"views": 1}})
 			return
 		}
 
 		c.JSON(http.StatusOK, responses.PostResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": post}})
+	}
+}
+
+func increaseViews() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		postId := c.Param("postId")
+		defer cancel()
+		objId, _ := primitive.ObjectIDFromHex(postId)
+
+		result, err := postCollection.UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$inc": bson.M{"views": 1000}})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.PostResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.PostResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": result}})
 	}
 }
 

@@ -23,5 +23,12 @@ func main() {
 	routes.UserRoute(router)
 	routes.PostRoute(router)
 
+	router.NoRoute(func(c *gin.Context) {
+		c.JSON(404, gin.H{
+			"status":  "404",
+			"message": "Page not found",
+		})
+	})
+
 	router.Run("localhost:8080")
 }
