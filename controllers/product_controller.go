@@ -136,3 +136,24 @@ func DeleteProduct() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.ProductResponse{Status: http.StatusOK, Message: "Product Deleted Successfully", Data: nil})
 	}
 }
+
+func GetAllProducts() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		var products []models.Product
+		defer cancel()
+
+		cursor, err := productCollection.Find(ctx, bson.M{})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.ProductResponse{Status: http.StatusInternalServerError, Message: "Internal Server Error", Data: err.Error()})
+			return
+		}
+
+		if err = cursor.All(ctx, &products); err != nil {
+			c.JSON(http.StatusInternalServerError, responses.ProductResponse{Status: http.StatusInternalServerError, Message: "Internal Server Error", Data: err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.ProductResponse{Status: http.StatusOK, Message: "Success", Data: products})
+	}
+}
