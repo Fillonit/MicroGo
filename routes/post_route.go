@@ -16,4 +16,5 @@ func PostRoute(router *gin.Engine) {
 	router.POST("/posts/:postId/comments", controllers.CreateComment())
 	router.GET("/posts/:postId/comments", controllers.GetComments())
 	router.PUT("/posts/:postId/comments/:commentId", controllers.EditComment())
+	router.POST("/post/:postId/increase_views", controllers.IncreaseViews())
 }
