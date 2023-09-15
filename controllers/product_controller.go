@@ -157,3 +157,25 @@ func GetAllProducts() gin.HandlerFunc {
 		c.JSON(http.StatusOK, responses.ProductResponse{Status: http.StatusOK, Message: "Success", Data: products})
 	}
 }
+
+func GetProductsByStore() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		store := c.Param("store")
+		var products []models.Product
+		defer cancel()
+
+		cursor, err := productCollection.Find(ctx, bson.M{"store": store})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, responses.ProductResponse{Status: http.StatusInternalServerError, Message: "Internal Server Error", Data: err.Error()})
+			return
+		}
+
+		if err = cursor.All(ctx, &products); err != nil {
+			c.JSON(http.StatusInternalServerError, responses.ProductResponse{Status: http.StatusInternalServerError, Message: "Internal Server Error", Data: err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, responses.ProductResponse{Status: http.StatusOK, Message: "Success", Data: products})
+	}
+}
