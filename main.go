@@ -22,6 +22,7 @@ func main() {
 
 	routes.UserRoute(router)
 	routes.PostRoute(router)
+	routes.ProductRoute(router)
 
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{
