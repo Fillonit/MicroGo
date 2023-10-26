@@ -27,3 +27,9 @@ type Comment struct {
 	UpdatedAt time.Time          `json:"updated_at,omitempty"`
 	Pongs     int                `json:"pongs,omitempty" bson:"pongs,omitempty" default:"1"`
 }
+
+type Category struct {
+	Id primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Name string `json:"name,omitempty" validate:"required"`
+	Order int `json:"order,omitempty" validate:"required"`
+}
