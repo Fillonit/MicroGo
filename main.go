@@ -10,6 +10,8 @@ import (
 func main() {
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"127.0.0.1"})
+	configs.EnvMongoURI()
+	configs.EnvSecretKey()
 	configs.ConnectDB()
 
 	router.GET("/", func(c *gin.Context) {
