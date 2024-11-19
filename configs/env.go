@@ -17,9 +17,17 @@ func init() {
 }
 
 func EnvMongoURI() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: Error loading .env file, proceeding with environment variables set in the system.")
+	}
 	return os.Getenv("MONGODB_URI")
 }
 
 func EnvSecretKey() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: Error loading .env file, proceeding with environment variables set in the system.")
+	}
 	return os.Getenv("SECRET_KEY")
 }
